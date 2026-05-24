@@ -1,0 +1,15 @@
+.DS_Store
+Thumbs.db
+desktop.ini
+
+**/.env
+**/.venv/
+**/__pycache__/
+**/.pytest_cache/
+**/node_modules/
+**/.chrome-headless/
+**/.edge-headless/
+
+*.log
+.coverage
+coverage.xml

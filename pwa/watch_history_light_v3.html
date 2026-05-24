@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Movie Tracker</title>
+    <script>
+      (() => {
+        const currentUrl = new URL(window.location.href);
+        const currentFileName = currentUrl.pathname.split("/").pop() || "index.html";
+        const routeAliasByFileName = Object.freeze({
+          "watch_history_light_v3.html": "watch-history.html",
+        });
+        const targetFileName = routeAliasByFileName[currentFileName] || currentFileName;
+        const projectRootPath = currentUrl.pathname.replace(/[^/]*$/, "");
+        const nextUrl = new URL(`./pages/${targetFileName}`, `${currentUrl.origin}${projectRootPath}`);
+        nextUrl.search = window.location.search;
+        nextUrl.hash = window.location.hash;
+        window.location.replace(nextUrl.href);
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>

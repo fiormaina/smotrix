@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Movie Tracker как PWA: история просмотра, папки и профиль с online-first архитектурой." />
+    <meta name="theme-color" content="#7c5cfc" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Смотрикс" />
+    <meta name="application-name" content="Смотрикс" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <title>Смотрикс</title>
+    <script>
+      (() => {
+        const ACCESS_TOKEN_STORAGE_KEY = "movieTracker.accessToken";
+        const CURRENT_USER_STORAGE_KEY = "movieTracker.currentUser";
+        const API_BASE_URL_STORAGE_KEY = "movieTracker.apiBaseUrl";
+
+        try {
+          const accessToken = String(window.localStorage.getItem(ACCESS_TOKEN_STORAGE_KEY) ?? "").trim();
+          const rawCurrentUser = window.localStorage.getItem(CURRENT_USER_STORAGE_KEY);
+          const apiBaseUrl = String(window.localStorage.getItem(API_BASE_URL_STORAGE_KEY) ?? "").trim().replace(/\/+$/, "");
+
+          if (!accessToken || !rawCurrentUser) return;
+
+          JSON.parse(rawCurrentUser);
+
+          const currentUrl = new URL(window.location.href);
+          const projectRootPath = currentUrl.pathname.replace(/[^/]*$/, "");
+          const nextUrl = new URL("./pages/watch-history.html", `${currentUrl.origin}${projectRootPath}`);
+
+          if (apiBaseUrl) {
+            nextUrl.searchParams.set("apiBaseUrl", apiBaseUrl);
+          }
+
+          if (nextUrl.href !== currentUrl.href) {
+            window.location.replace(nextUrl.href);
+          }
+        } catch (error) {
+          console.warn(error);
+        }
+      })();
+    </script>
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="./assets/pwa/icon-180.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="./assets/pwa/icon-192.png" />
+    <link rel="stylesheet" href="./src/styles/base/tokens.css" />
+    <link rel="stylesheet" href="./landing-simple.css" />
+    <link rel="stylesheet" href="./src/styles/components/pwa-shell.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="background-orb background-orb--left" aria-hidden="true"></div>
+      <div class="background-orb background-orb--right" aria-hidden="true"></div>
+      <main id="app" class="app-root"></main>
+    </div>
+    <script src="./runtime-config.js"></script>
+    <script src="./src/scripts/pwa/network.js"></script>
+    <script src="./src/scripts/pwa/sync-queue.js"></script>
+    <script src="./src/scripts/pwa/init.js"></script>
+    <script src="./main-simple.js"></script>
+  </body>
+</html>

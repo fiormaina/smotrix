@@ -1,0 +1,199 @@
+.folder-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 236px;
+  overflow: hidden;
+  padding: 22px;
+  border: 1px solid rgba(124, 92, 252, 0.18);
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: var(--shadow);
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.folder-card:hover,
+.folder-card:focus-within {
+  transform: translateY(-2px);
+  border-color: rgba(124, 92, 252, 0.36);
+  box-shadow: 0 22px 46px rgba(104, 87, 164, 0.12);
+}
+
+.folder-card__top {
+  position: relative;
+}
+
+.folder-card__posters {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+  padding: 16px;
+  border: 1px solid rgba(124, 92, 252, 0.16);
+  border-radius: 22px;
+  background: linear-gradient(180deg, #fbfaff, #f4f2fb);
+  box-shadow: 0 14px 34px rgba(104, 87, 164, 0.06);
+}
+
+.folder-card__poster {
+  aspect-ratio: 0.95;
+  min-width: 0;
+  border: 1px solid rgba(124, 92, 252, 0.18);
+  border-radius: 18px;
+  background: linear-gradient(180deg, #b4abff 0%, #7259ef 100%);
+}
+
+.folder-card__poster:nth-child(2) {
+  background: linear-gradient(180deg, #cdd0f7 0%, #8d84ef 100%);
+}
+
+.folder-card__poster:nth-child(3) {
+  background: linear-gradient(180deg, #ddd9f8 0%, #a091f7 100%);
+}
+
+.folder-card__poster:nth-child(4) {
+  background: linear-gradient(180deg, #e2e0ef 0%, #f1f0f7 100%);
+}
+
+.folder-card__actions {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  transform: translateX(10px);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.folder-card:hover .folder-card__actions,
+.folder-card:focus-within .folder-card__actions {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.folder-card__action {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.folder-card__tooltip {
+  position: absolute;
+  right: 54px;
+  top: 50%;
+  transform: translateY(-50%) translateX(8px);
+  white-space: nowrap;
+  padding: 9px 12px;
+  border-radius: 12px;
+  background: var(--black-soft);
+  color: var(--white);
+  font-size: 0.9rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.folder-card__action:hover .folder-card__tooltip,
+.folder-card__action:focus-within .folder-card__tooltip {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+.folder-card__icon-button {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.96);
+  color: #2a2a32;
+  cursor: pointer;
+  box-shadow: 0 10px 22px rgba(27, 27, 30, 0.06);
+}
+
+.folder-card__icon-button:hover,
+.folder-card__icon-button:focus-visible {
+  color: var(--accent-strong);
+  background: var(--white);
+}
+
+.folder-card__icon-button--danger:hover,
+.folder-card__icon-button--danger:focus-visible {
+  color: var(--danger);
+}
+
+.folder-card__body {
+  padding-top: 18px;
+}
+
+.folder-card__title {
+  margin: 0 0 12px;
+  font-size: 1.22rem;
+}
+
+.folder-card__count {
+  margin: 0;
+  color: #6d6a78;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.folder-card__owner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  color: #6d6a78;
+  font-size: 0.92rem;
+}
+
+.folder-card__avatar {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #8c7fff, #6e53f4);
+  color: var(--white);
+}
+
+.modal-card__secondary {
+  min-height: 44px;
+  padding: 0 20px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--white);
+  color: #6d6a78;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.modal-card__secondary:hover,
+.modal-card__secondary:focus-visible {
+  border-color: var(--accent-border);
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+@media (max-width: 680px) {
+  .folder-card,
+  .folder-card:hover,
+  .folder-card:focus-within {
+    transform: none;
+    border-color: rgba(124, 92, 252, 0.18);
+    box-shadow: var(--shadow);
+  }
+
+  .folder-card__actions {
+    opacity: 1;
+    transform: none;
+  }
+
+  .folder-card__tooltip {
+    display: none;
+  }
+}

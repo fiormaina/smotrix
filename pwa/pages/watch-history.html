@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="История просмотра Movie Tracker в PWA-формате с online-first загрузкой." />
+    <meta name="theme-color" content="#7c5cfc" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Смотрикс" />
+    <meta name="application-name" content="Смотрикс" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <title>Смотрикс · История просмотра</title>
+    <link rel="manifest" href="../manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="../assets/pwa/icon-180.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="../assets/pwa/icon-192.png" />
+    <link rel="stylesheet" href="../src/styles/base/tokens.css" />
+    <link rel="stylesheet" href="../src/styles/base/reset.css" />
+    <link rel="stylesheet" href="../src/styles/base/utilities.css" />
+    <link rel="stylesheet" href="../src/styles/layouts/app-shell.css?v=20260524b" />
+    <link rel="stylesheet" href="../src/styles/components/history-ui.css?v=20260524b" />
+    <link rel="stylesheet" href="../src/styles/components/pwa-shell.css" />
+    <link rel="stylesheet" href="../src/styles/pages/watch-history.css" />
+  </head>
+  <body>
+    <main id="watch-history-app"></main>
+    <script src="../runtime-config.js"></script>
+    <script src="../src/scripts/pwa/network.js"></script>
+    <script src="../src/scripts/pwa/sync-queue.js"></script>
+    <script src="../src/scripts/pwa/init.js"></script>
+    <script src="../src/scripts/app-runtime.js?v=20260524d"></script>
+    <script src="../src/scripts/stores/folders-store.js"></script>
+    <script src="../src/scripts/services/media-api.js"></script>
+    <script src="../src/scripts/pages/watch-history.js?v=20260524c"></script>
+  </body>
+</html>

@@ -1,0 +1,29 @@
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700;800&display=swap");
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+html {
+  scrollbar-gutter: stable;
+}
+
+body {
+  font-family: var(--font-family-base);
+  color: var(--text);
+  background: linear-gradient(180deg, #f9f8fd 0%, var(--page-bg) 100%);
+  overflow-y: scroll;
+}
+
+button,
+input,
+a,
+textarea {
+  font: inherit;
+}

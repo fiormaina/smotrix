@@ -1,0 +1,166 @@
+.pwa-chrome {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+}
+
+.pwa-status-banner,
+.pwa-install-card {
+  pointer-events: auto;
+}
+
+.pwa-status-banner {
+  position: fixed;
+  top: 18px;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: min(680px, calc(100vw - 32px));
+  padding: 14px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.48);
+  border-radius: 18px;
+  background: rgba(29, 29, 36, 0.94);
+  color: var(--white);
+  box-shadow: 0 24px 54px rgba(18, 16, 28, 0.26);
+  transform: translateX(-50%);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.pwa-status-banner[data-mode="checking"] {
+  background: rgba(65, 55, 112, 0.94);
+}
+
+.pwa-status-banner[data-mode="degraded"] {
+  background: rgba(122, 84, 20, 0.94);
+}
+
+.pwa-status-banner[data-mode="offline"] {
+  background: rgba(136, 46, 66, 0.96);
+}
+
+.pwa-status-banner--hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -8px);
+}
+
+.pwa-status-banner__content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pwa-status-banner__dot {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: currentColor;
+  box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.1);
+}
+
+.pwa-status-banner__text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.pwa-status-banner__action {
+  min-width: 132px;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  color: inherit;
+  cursor: pointer;
+}
+
+.pwa-install-card {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  width: min(360px, calc(100vw - 32px));
+  padding: 18px 18px 16px;
+  border: 1px solid rgba(124, 92, 252, 0.18);
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.98)),
+    var(--surface);
+  box-shadow: var(--modal-shadow);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.pwa-install-card--hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px);
+}
+
+.pwa-install-card__copy strong {
+  display: block;
+  color: var(--text);
+  font-size: 17px;
+}
+
+.pwa-install-card__copy p {
+  margin: 8px 0 0;
+  color: var(--text-tab);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.pwa-install-card__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.pwa-install-card__button,
+.pwa-install-card__dismiss {
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.pwa-install-card__button {
+  border: 0;
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  color: var(--white);
+  box-shadow: 0 16px 32px rgba(91, 61, 232, 0.24);
+}
+
+.pwa-install-card__dismiss {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--text);
+}
+
+body.app-standalone .history-page__navbar {
+  padding-top: max(0px, env(safe-area-inset-top));
+}
+
+@media (max-width: 720px) {
+  .pwa-status-banner {
+    top: 12px;
+    gap: 14px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pwa-status-banner__action {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .pwa-install-card {
+    right: 16px;
+    bottom: 16px;
+    left: 16px;
+    width: auto;
+  }
+}

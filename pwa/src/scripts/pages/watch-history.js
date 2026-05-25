@@ -54,6 +54,48 @@ const defaultManualForm = {
   comment: "",
 };
 
+const previewItems = Object.freeze([
+  {
+    id: "preview-series-severance",
+    type: "series",
+    title: "Разделение",
+    meta: "Сериал · 2 сезон · 4 серия",
+    status: "watching",
+    badge: "48 мин осталось",
+    progress: 72,
+    rating: null,
+    comment: "",
+    continueUrl: "https://example.com/watch/severance-s2e4",
+    updatedAt: "2026-05-25T14:20:00.000Z",
+  },
+  {
+    id: "preview-movie-dune",
+    type: "movie",
+    title: "Дюна: Часть вторая",
+    meta: "Фильм · 2024",
+    status: "completed",
+    badge: "",
+    progress: 100,
+    rating: 9,
+    comment: "Сильный визуал и темп.",
+    watchedAt: "2026-05-24T20:30:00.000Z",
+    updatedAt: "2026-05-24T20:30:00.000Z",
+  },
+  {
+    id: "preview-series-bear",
+    type: "series",
+    title: "Медведь",
+    meta: "Сериал · 3 сезон",
+    status: "completed",
+    badge: "",
+    progress: 100,
+    rating: 8,
+    comment: "",
+    watchedAt: "2026-05-23T18:10:00.000Z",
+    updatedAt: "2026-05-23T18:10:00.000Z",
+  },
+]);
+
 const cardActions = {
   rate: {
     label: "Оценить",
@@ -139,6 +181,15 @@ function reportFatalError(error) {
       <pre style="white-space: pre-wrap; overflow-wrap: anywhere; text-align: left; font-size: 12px; line-height: 1.5; padding: 16px; border-radius: 16px; background: rgba(15, 23, 42, 0.06); color: #1f2937;">${escapeHtml(message)}</pre>
     </section>
   `;
+}
+
+function isPreviewMode() {
+  try {
+    const value = new URL(window.location.href).searchParams.get("preview");
+    return ["1", "true", "yes", "on"].includes(String(value ?? "").trim().toLowerCase());
+  } catch (error) {
+    return false;
+  }
 }
 
 function structuredCloneWithSet(value) {
@@ -841,6 +892,16 @@ async function hydrateWatchHistory() {
     loading: true,
     errorMessage: "",
   }), { scope: "content" });
+
+  if (isPreviewMode()) {
+    setState((currentState) => ({
+      ...currentState,
+      items: previewItems.map((item) => normalizeHistoryItem(item)),
+      loading: false,
+      errorMessage: "",
+    }), { scope: "content" });
+    return;
+  }
 
   try {
     const items = await watchHistoryApi.listWatchHistory();

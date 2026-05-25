@@ -17,6 +17,15 @@
     return new URL(path, `${window.location.origin}${getProjectRootPath()}`);
   }
 
+  function isPreviewMode() {
+    try {
+      const value = new URL(window.location.href).searchParams.get("preview");
+      return ["1", "true", "yes", "on"].includes(String(value ?? "").trim().toLowerCase());
+    } catch (error) {
+      return false;
+    }
+  }
+
   function isStandaloneMode() {
     return window.matchMedia?.("(display-mode: standalone)")?.matches || window.navigator.standalone === true;
   }
@@ -119,6 +128,11 @@
   function updateStatusBanner(networkState) {
     const { banner, text } = getStatusBannerElements();
     if (!banner || !text) return;
+
+    if (isPreviewMode()) {
+      banner.classList.add("pwa-status-banner--hidden");
+      return;
+    }
 
     const mode = networkState?.mode ?? "checking";
     const shouldHideBanner = mode === "online" || mode === "checking";

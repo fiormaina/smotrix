@@ -18,6 +18,15 @@
     return String(value ?? "").trim().replace(/\/+$/, "");
   }
 
+  function isPreviewMode() {
+    try {
+      const value = new URL(window.location.href).searchParams.get("preview");
+      return ["1", "true", "yes", "on"].includes(String(value ?? "").trim().toLowerCase());
+    } catch (error) {
+      return false;
+    }
+  }
+
   function isLoopbackHostname(hostname) {
     return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1";
   }
@@ -128,6 +137,17 @@
 
   async function refresh() {
     const apiBaseUrl = resolveApiBaseUrl();
+
+    if (isPreviewMode()) {
+      setState({
+        apiBaseUrl,
+        backendReachable: true,
+        checkedAt: new Date().toISOString(),
+        navigatorOnline: navigator.onLine,
+      });
+      scheduleRefresh();
+      return getState();
+    }
 
     if (!navigator.onLine) {
       setState({

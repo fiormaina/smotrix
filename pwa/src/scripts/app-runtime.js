@@ -1454,7 +1454,17 @@
       .join("");
   }
 
-  function renderMobileMenu(tabs, supportTabs, profileUrl, profileActive, headerUser) {
+  function renderMobileMenu(tabs, supportTabs, profileUrl, profileActive) {
+    const mobileTabs = [
+      ...tabs,
+      {
+        label: "Профиль",
+        active: profileActive,
+        static: profileActive,
+        url: profileActive ? "" : profileUrl,
+      },
+    ];
+
     return `
       <div class="history-page__mobile-menu-shell">
         <button
@@ -1497,26 +1507,10 @@
               </button>
             </div>
             <nav class="history-page__mobile-menu-nav" aria-label="Мобильная навигация">
-              ${renderTabs(tabs)}
+              ${renderTabs(mobileTabs)}
               <div class="history-page__mobile-menu-group" aria-label="Информация о проекте">
-                <span class="history-page__mobile-menu-label">О сервисе</span>
                 ${renderTabs(supportTabs)}
               </div>
-              <button
-                class="history-page__mobile-profile ${profileActive ? "history-page__mobile-profile--active" : ""}"
-                type="button"
-                data-nav-url="${profileUrl}"
-                aria-label="Открыть профиль"
-              >
-                ${renderUserAvatar({
-                  avatarKey: headerUser.avatarKey,
-                  avatarImage: headerUser.avatarImage,
-                  size: 42,
-                  className: "history-page__mobile-profile-visual",
-                  iconSize: 18,
-                })}
-                <span>Профиль</span>
-              </button>
             </nav>
           </section>
         </div>
@@ -1736,7 +1730,7 @@
             iconSize: 18,
           })}
         </button>
-        ${renderMobileMenu(tabs, supportTabs, profileUrl, profileActive, headerUser)}
+        ${renderMobileMenu(tabs, supportTabs, profileUrl, profileActive)}
       </header>
     `;
   }

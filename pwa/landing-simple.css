@@ -441,6 +441,10 @@ button {
 }
 
 @media (max-width: 720px) {
+  .footer__links {
+    display: none;
+  }
+
   .landing {
     background-position: center center, center bottom;
   }

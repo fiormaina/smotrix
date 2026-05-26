@@ -1,0 +1,80 @@
+{
+  "manifest_version": 3,
+  "name": "Смотрикс",
+  "version": "0.1.0",
+  "description": "Расширение для отслеживания просмотра фильмов и сериалов",
+  "icons": {
+    "16": "src/assets/smotrix-icon.png",
+    "32": "src/assets/smotrix-icon.png",
+    "48": "src/assets/smotrix-icon.png",
+    "128": "src/assets/smotrix-icon.png"
+  },
+  "action": {
+    "default_title": "Смотрикс",
+    "default_icon": {
+      "16": "src/assets/smotrix-icon.png",
+      "32": "src/assets/smotrix-icon.png",
+      "48": "src/assets/smotrix-icon.png",
+      "128": "src/assets/smotrix-icon.png"
+    },
+    "default_popup": "src/popup/popup.html"
+  },
+  "background": {
+    "service_worker": "src/background/main.js",
+    "type": "module"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; style-src 'self' 'unsafe-inline';"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://amediateka.ru/*",
+        "https://*.amediateka.ru/*",
+        "https://ivi.ru/*",
+        "https://*.ivi.ru/*",
+        "https://hd.kinopoisk.ru/*",
+        "https://*.hd.kinopoisk.ru/*",
+        "https://kion.ru/*",
+        "https://*.kion.ru/*",
+        "https://premier.one/*",
+        "https://*.premier.one/*",
+        "https://viju.ru/*",
+        "https://*.viju.ru/*",
+        "https://wink.ru/*",
+        "https://*.wink.ru/*"
+      ],
+      "js": ["src/content/main.js"],
+      "run_at": "document_start",
+      "type": "module"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["src/page/ivi-fetch-bridge.js"],
+      "matches": ["https://www.ivi.ru/*", "https://*.ivi.ru/*"]
+    },
+    {
+      "resources": ["src/page/amediateka-watch-context-bridge.js"],
+      "matches": ["https://www.amediateka.ru/*", "https://*.amediateka.ru/*"]
+    }
+  ],
+  "permissions": ["storage", "tabs"],
+  "host_permissions": [
+    "https://amediateka.ru/*",
+    "https://*.amediateka.ru/*",
+    "https://ivi.ru/*",
+    "https://*.ivi.ru/*",
+    "https://hd.kinopoisk.ru/*",
+    "https://*.hd.kinopoisk.ru/*",
+    "https://kion.ru/*",
+    "https://*.kion.ru/*",
+    "https://premier.one/*",
+    "https://*.premier.one/*",
+    "https://viju.ru/*",
+    "https://*.viju.ru/*",
+    "https://wink.ru/*",
+    "https://*.wink.ru/*",
+    "http://89.23.99.104/*"
+  ]
+}

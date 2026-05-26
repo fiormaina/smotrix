@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Смотрикс</title>
+    <link rel="stylesheet" href="./popup.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="card">
+        <div class="brand">
+          <img class="brand-logo" src="../assets/smotrix-icon.png" alt="Смотрикс" />
+          <div>
+            <p class="eyebrow">Смотрикс</p>
+            <h1 id="popup-title" class="title">Подключение расширения</h1>
+          </div>
+        </div>
+
+        <div id="status-banner" class="status-banner hidden" aria-live="polite"></div>
+
+        <section id="view-unbound" class="view">
+          <p class="copy">
+            Введите код привязки аккаунта, чтобы подключить расширение к веб-платформе.
+          </p>
+
+          <form id="bind-form" class="form">
+            <label class="field">
+              <span class="field-label">Код привязки</span>
+              <input
+                id="code-input"
+                class="input"
+                type="text"
+                inputmode="text"
+                autocomplete="off"
+                placeholder="Например, MT-4821"
+                maxlength="32"
+              />
+            </label>
+
+            <button id="connect-button" class="button button-primary" type="submit">
+              Подключить
+            </button>
+          </form>
+
+          <p id="error-text" class="error hidden" aria-live="assertive"></p>
+
+          <a id="platform-link-unbound" class="link" href="#" target="_blank" rel="noreferrer">
+            Открыть веб-платформу
+          </a>
+        </section>
+
+        <section id="view-bound" class="view hidden">
+          <div class="profile">
+            <div class="avatar" id="avatar">MT</div>
+            <div class="profile-meta">
+              <p id="profile-name" class="profile-name"></p>
+              <p id="profile-email" class="profile-email"></p>
+            </div>
+          </div>
+
+          <div class="connected-box">
+            <p class="connected-title">Аккаунт подключён</p>
+            <p id="connected-at" class="connected-copy"></p>
+          </div>
+
+          <div class="actions">
+            <button id="open-platform-button" class="button button-primary" type="button">
+              Открыть платформу
+            </button>
+            <button id="disconnect-button" class="button button-secondary" type="button">
+              Отключить расширение
+            </button>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script type="module" src="./popup.js"></script>
+  </body>
+</html>

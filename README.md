@@ -73,9 +73,9 @@ pip install -r requirements.txt
 MYSQL_HOST=127.0.0.1
 MYSQL_PORT=3306
 MYSQL_USER=root
-MYSQL_PASSWORD=12345
+MYSQL_PASSWORD=<DB_PASSWORD>
 MYSQL_DATABASE=movie_tracker
-AUTH_SECRET_KEY=movie-tracker-local-secret
+AUTH_SECRET_KEY=<AUTH_SECRET_KEY>
 ```
 
 Если база создается с нуля, примените миграции:

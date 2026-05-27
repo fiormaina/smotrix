@@ -155,6 +155,49 @@ class FrontendApiServiceTests(unittest.TestCase):
         self.assertEqual(refreshed_item.system_folder_id, self.viewer_watched_folder.id)
         self.assertEqual(refreshed_item.custom_folder_id, self.viewer_custom_folder.id)
 
+    def test_update_media_item_progress_100_promotes_item_without_explicit_watched_flag(self) -> None:
+        item = WatchItem(
+            user_id=self.viewer.id,
+            system_folder_id=self.viewer_watching_folder.id,
+            custom_folder_id=None,
+            source="manual",
+            content_type="movie",
+            title="Movie",
+            source_url="https://example.com/movie",
+            year=2025,
+            genres=["drama"],
+            duration_text="110 мин",
+            description=None,
+            imdb_rating=7.5,
+            user_rating=None,
+            comment=None,
+            status="watching",
+            progress_percent=40,
+            progress_seconds=None,
+            duration_seconds=6600,
+            season=None,
+            episode=None,
+            watched_at=None,
+        )
+        self.db.add(item)
+        self.db.commit()
+        self.db.refresh(item)
+
+        result = update_media_item(
+            self.db,
+            self.viewer,
+            item.id,
+            progress=100,
+        )
+        refreshed_item = self.db.get(WatchItem, item.id)
+
+        self.assertTrue(result["watched"])
+        self.assertEqual(result["progress"], 100)
+        self.assertIsNotNone(refreshed_item)
+        self.assertEqual(refreshed_item.status, "completed")
+        self.assertEqual(refreshed_item.system_folder_id, self.viewer_watched_folder.id)
+        self.assertIsNotNone(refreshed_item.watched_at)
+
     def test_recent_media_limit_is_clamped_and_search_uses_meta_fields(self) -> None:
         for title, genre, content_type in [
             ("First", "drama", "movie"),

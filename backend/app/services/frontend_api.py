@@ -960,8 +960,7 @@ def update_watch_history_item(
         progress_mode="direct",
         clear_watched_at_on_incomplete_status=True,
     )
-    if status_value is not None:
-        item.system_folder_id = get_system_folder_for_status(db, viewer, next_status).id
+    item.system_folder_id = get_system_folder_for_status(db, viewer, next_status).id
 
     db.commit()
     db.refresh(item)
@@ -1053,8 +1052,7 @@ def update_media_item(
         progress_percent=progress if progress is not None else UNSET,
         progress_mode="direct",
     )
-    if watched is True:
-        item.system_folder_id = get_system_folder_for_status(db, viewer, next_status).id
+    item.system_folder_id = get_system_folder_for_status(db, viewer, next_status).id
 
     db.commit()
     db.refresh(item)

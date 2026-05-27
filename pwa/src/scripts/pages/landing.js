@@ -387,8 +387,29 @@ function saveCurrentUser(user) {
   localStorage.setItem(CURRENT_USER_STORAGE_KEY, JSON.stringify(user));
 }
 
+function isSafeRedirectUrl(url) {
+  return url instanceof URL && url.origin === window.location.origin;
+}
+
+function resolveSafeRedirectUrl(value, fallbackValue = routes.watchHistory) {
+  const fallbackUrl = new URL(routes.resolveAppUrl(fallbackValue, fallbackValue, { absolute: true }));
+
+  if (typeof value !== "string" || !value.trim()) {
+    return fallbackUrl;
+  }
+
+  try {
+    const candidateUrl = new URL(
+      routes.resolveAppUrl(value, fallbackValue, { absolute: true }),
+    );
+    return isSafeRedirectUrl(candidateUrl) ? candidateUrl : fallbackUrl;
+  } catch (error) {
+    return fallbackUrl;
+  }
+}
+
 function buildRouteUrlWithApiBase(targetPath) {
-  const routeUrl = new URL(routes.resolveAppUrl(targetPath, targetPath, { absolute: true }));
+  const routeUrl = resolveSafeRedirectUrl(targetPath, routes.watchHistory);
   if (API_BASE_URL) {
     routeUrl.searchParams.set("apiBaseUrl", API_BASE_URL);
   }
@@ -419,21 +440,7 @@ function buildPostAuthRedirectUrl(targetPath, user) {
     return redirectUrl.href;
   }
 
-  const accessToken = String(localStorage.getItem(ACCESS_TOKEN_STORAGE_KEY) ?? "").trim();
-  const transferredState = {
-    apiBaseUrl: API_BASE_URL,
-    currentUser: user,
-  };
-
-  if (accessToken) {
-    transferredState.accessToken = accessToken;
-  }
-
-  const hashParams = new URLSearchParams(redirectUrl.hash.startsWith("#") ? redirectUrl.hash.slice(1) : redirectUrl.hash);
-  hashParams.set(APP_STATE_TRANSFER_HASH_KEY, encodeAppStateTransfer(transferredState));
-  redirectUrl.hash = hashParams.toString();
-
-  return redirectUrl.href;
+  return buildRouteUrlWithApiBase(routes.watchHistory).href;
 }
 
 function sanitizeRedirectTarget(value) {
@@ -441,7 +448,8 @@ function sanitizeRedirectTarget(value) {
   if (!trimmedValue) return "";
 
   try {
-    return routes.resolveAppUrl(trimmedValue, routes.watchHistory, { absolute: true });
+    const redirectUrl = resolveSafeRedirectUrl(trimmedValue, routes.watchHistory);
+    return isSafeRedirectUrl(redirectUrl) ? redirectUrl.href : "";
   } catch (error) {
     return "";
   }
@@ -671,7 +679,7 @@ function initApp() {
 
   pendingAuthRedirectTarget = authRequest.redirectTarget;
   if (pendingAuthRedirectTarget && hasAuthenticatedSession()) {
-    window.location.href = pendingAuthRedirectTarget;
+    window.location.href = resolveSafeRedirectUrl(pendingAuthRedirectTarget, routes.watchHistory).href;
     return;
   }
 

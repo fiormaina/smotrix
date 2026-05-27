@@ -458,8 +458,7 @@ def update_watch_item(
         reject_non_series_position=True,
         clear_watched_at_on_incomplete_status=True,
     )
-    if "status" in updates:
-        item.system_folder_id = get_system_folder_for_status(db, user, next_status).id
+    item.system_folder_id = get_system_folder_for_status(db, user, next_status).id
 
     db.commit()
     db.refresh(item)

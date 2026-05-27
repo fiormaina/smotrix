@@ -119,6 +119,14 @@
     return folder?.role === "owner" && !isProtectedSystemFolder(folder);
   }
 
+  function canEditFolder(folder) {
+    return folder?.role === "owner" && folder?.canEdit !== false && !isProtectedSystemFolder(folder);
+  }
+
+  function canDeleteFolder(folder) {
+    return folder?.role === "owner" && folder?.canDelete !== false && !isProtectedSystemFolder(folder);
+  }
+
   function cloneState(value) {
     return {
       ...value,
@@ -233,8 +241,12 @@
 
   function renderFolderActions(folder) {
     if (folder.role === "owner") {
+      const canEdit = canEditFolder(folder);
+      const canDelete = canDeleteFolder(folder);
       const editButton = state.editMode
         ? ""
+        : !canEdit
+          ? ""
         : `
           <button class="profile-button" type="button" data-action="toggle-edit">
             <svg width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true">
@@ -254,13 +266,17 @@
             </svg>
             Копировать ссылку
           </button>
-          <button class="profile-button" type="button" data-action="delete-folder" ${state.pendingAction ? "disabled" : ""}>
-            <svg width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-              <path d="M4.2 5.6H13.8" stroke="currentColor" stroke-width="1.55" stroke-linecap="round"></path>
-              <path d="M7.2 3.8H10.8M6 5.6L6.45 14.1C6.49 14.73 7 15.2 7.63 15.2H10.37C11 15.2 11.51 14.73 11.55 14.1L12 5.6" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"></path>
-            </svg>
-            Удалить папку
-          </button>
+          ${canDelete
+            ? `
+              <button class="profile-button" type="button" data-action="delete-folder" ${state.pendingAction ? "disabled" : ""}>
+                <svg width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                  <path d="M4.2 5.6H13.8" stroke="currentColor" stroke-width="1.55" stroke-linecap="round"></path>
+                  <path d="M7.2 3.8H10.8M6 5.6L6.45 14.1C6.49 14.73 7 15.2 7.63 15.2H10.37C11 15.2 11.51 14.73 11.55 14.1L12 5.6" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+                Удалить папку
+              </button>
+            `
+            : ""}
         </div>
       `;
     }
@@ -330,7 +346,7 @@
   }
 
   function renderEditForm(folder) {
-    if (!state.editMode || folder.role !== "owner") return "";
+    if (!state.editMode || !canEditFolder(folder)) return "";
 
     return `
       <div class="folder-detail__edit">
@@ -717,6 +733,8 @@
   }
 
   function openDeleteOverlay() {
+    if (!canDeleteFolder(state.folder)) return;
+
     setState((currentState) => ({
       ...currentState,
       deleteOverlayOpen: true,
@@ -732,7 +750,7 @@
   }
 
   function toggleEditMode() {
-    if (!state.folder || state.folder.role !== "owner") return;
+    if (!canEditFolder(state.folder)) return;
 
     if (!state.editMode) {
       syncEditForm(state.folder);
@@ -746,7 +764,7 @@
   }
 
   async function saveEdit() {
-    if (!state.folder || state.folder.role !== "owner" || state.pendingAction) return;
+    if (!canEditFolder(state.folder) || state.pendingAction) return;
 
     setState((currentState) => ({
       ...currentState,
@@ -871,7 +889,7 @@
   }
 
   async function confirmDeleteFolder() {
-    if (!state.folder || state.pendingAction) return;
+    if (!canDeleteFolder(state.folder) || state.pendingAction) return;
 
     setState((currentState) => ({
       ...currentState,

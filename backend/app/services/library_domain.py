@@ -240,6 +240,10 @@ def apply_watch_item_state(
     elif explicit_status and next_status == STATUS_COMPLETED:
         item.progress_percent = 100
 
+    if not explicit_status and item.progress_percent >= 100:
+        next_status = STATUS_COMPLETED
+        item.status = STATUS_COMPLETED
+
     explicit_watched_at = watched_at is not UNSET
     if next_status == STATUS_COMPLETED:
         item.progress_percent = 100

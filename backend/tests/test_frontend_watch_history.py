@@ -282,6 +282,49 @@ class FrontendWatchHistoryTests(unittest.TestCase):
         self.assertEqual(refreshed_item.status, "planned")
         self.assertIsNone(refreshed_item.watched_at)
 
+    def test_update_watch_history_item_progress_100_promotes_item_to_completed(self) -> None:
+        item = WatchItem(
+            user_id=self.user.id,
+            system_folder_id=self.watching_folder.id,
+            custom_folder_id=None,
+            source="manual",
+            content_type="movie",
+            title="Фильм",
+            source_url=None,
+            year=2024,
+            genres=[],
+            duration_text=None,
+            description=None,
+            imdb_rating=None,
+            user_rating=None,
+            comment=None,
+            status="watching",
+            progress_percent=30,
+            season=None,
+            episode=None,
+            watched_at=None,
+        )
+        self.db.add(item)
+        self.db.commit()
+        self.db.refresh(item)
+
+        updated = update_watch_history_item(
+            self.db,
+            self.user,
+            item.id,
+            progress=100,
+        )
+        refreshed_item = self.db.get(WatchItem, item.id)
+        watched_folder = get_system_folder(self.db, self.user, "watched")
+
+        self.assertEqual(updated["status"], "completed")
+        self.assertEqual(updated["progress"], 100)
+        self.assertIsNotNone(updated["watchedAt"])
+        self.assertIsNotNone(refreshed_item)
+        self.assertEqual(refreshed_item.status, "completed")
+        self.assertEqual(refreshed_item.system_folder_id, watched_folder.id)
+        self.assertIsNotNone(refreshed_item.watched_at)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -3,6 +3,7 @@ import unittest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
+from app.models.folder import Folder
 from app.models.base import Base
 from app.models.user import User
 from app.models.watch_item import WatchItem
@@ -39,6 +40,11 @@ class LibraryWriteRulesTests(unittest.TestCase):
 
     def tearDown(self) -> None:
         self.db.close()
+
+    def get_system_folder(self, system_key: str) -> Folder:
+        folder_map = ensure_default_folders(self.db, self.user)
+        self.db.commit()
+        return folder_map[system_key]
 
     def test_create_completed_item_sets_watched_at_and_progress_seconds(self) -> None:
         response = create_watch_item(
@@ -86,6 +92,34 @@ class LibraryWriteRulesTests(unittest.TestCase):
         self.assertIsNotNone(item)
         self.assertEqual(item.status, "planned")
         self.assertIsNone(item.watched_at)
+
+    def test_update_progress_to_100_promotes_item_to_completed_and_moves_folder(self) -> None:
+        created = create_watch_item(
+            self.db,
+            self.user,
+            CreateWatchItemRequest(
+                type="movie",
+                title="Фильм",
+                status="watching",
+            ),
+        )
+
+        response = update_watch_item(
+            self.db,
+            self.user,
+            created.id,
+            UpdateWatchItemRequest(progress=100),
+        )
+        item = self.db.get(WatchItem, created.id)
+        watched_folder = self.get_system_folder("watched")
+
+        self.assertEqual(response.status, "completed")
+        self.assertEqual(response.progress_percent, 100)
+        self.assertIsNotNone(response.watched_at)
+        self.assertIsNotNone(item)
+        self.assertEqual(item.status, "completed")
+        self.assertEqual(item.system_folder_id, watched_folder.id)
+        self.assertIsNotNone(item.watched_at)
 
 
 if __name__ == "__main__":

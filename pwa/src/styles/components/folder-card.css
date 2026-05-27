@@ -12,7 +12,6 @@
   transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
 }
 
-.folder-card:hover,
 .folder-card:focus-within {
   transform: translateY(-2px);
   border-color: rgba(124, 92, 252, 0.36);
@@ -63,12 +62,11 @@
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  opacity: 0;
-  transform: translateX(10px);
+  opacity: 1;
+  transform: none;
   transition: opacity 180ms ease, transform 180ms ease;
 }
 
-.folder-card:hover .folder-card__actions,
 .folder-card:focus-within .folder-card__actions {
   opacity: 1;
   transform: translateX(0);
@@ -81,6 +79,7 @@
 }
 
 .folder-card__tooltip {
+  display: none;
   position: absolute;
   right: 54px;
   top: 50%;
@@ -96,7 +95,6 @@
   transition: opacity 160ms ease, transform 160ms ease;
 }
 
-.folder-card__action:hover .folder-card__tooltip,
 .folder-card__action:focus-within .folder-card__tooltip {
   opacity: 1;
   transform: translateY(-50%) translateX(0);
@@ -115,13 +113,11 @@
   box-shadow: 0 10px 22px rgba(27, 27, 30, 0.06);
 }
 
-.folder-card__icon-button:hover,
 .folder-card__icon-button:focus-visible {
   color: var(--accent-strong);
   background: var(--white);
 }
 
-.folder-card__icon-button--danger:hover,
 .folder-card__icon-button--danger:focus-visible {
   color: var(--danger);
 }
@@ -172,14 +168,55 @@
   font-weight: 600;
 }
 
-.modal-card__secondary:hover,
 .modal-card__secondary:focus-visible {
   border-color: var(--accent-border);
   background: var(--accent-soft);
   color: var(--accent-strong);
 }
 
-@media (max-width: 680px) {
+@media (hover: hover) and (pointer: fine) {
+  .folder-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(124, 92, 252, 0.36);
+    box-shadow: 0 22px 46px rgba(104, 87, 164, 0.12);
+  }
+
+  .folder-card__actions {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+
+  .folder-card:hover .folder-card__actions {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .folder-card__tooltip {
+    display: block;
+  }
+
+  .folder-card__action:hover .folder-card__tooltip {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
+
+  .folder-card__icon-button:hover {
+    color: var(--accent-strong);
+    background: var(--white);
+  }
+
+  .folder-card__icon-button--danger:hover {
+    color: var(--danger);
+  }
+
+  .modal-card__secondary:hover {
+    border-color: var(--accent-border);
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
   .folder-card,
   .folder-card:hover,
   .folder-card:focus-within {

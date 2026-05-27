@@ -506,12 +506,32 @@ function resolveAppUrl(value, fallbackRouteKey = "home") {
   }
 }
 
+function isSafeRedirectUrl(url) {
+  return url instanceof URL && url.origin === window.location.origin;
+}
+
+function resolveSafeRedirectUrl(value, fallbackRouteKey = "watchHistory") {
+  const fallbackUrl = new URL(resolveAppRouteUrl(fallbackRouteKey));
+
+  if (typeof value !== "string" || !value.trim()) {
+    return fallbackUrl;
+  }
+
+  try {
+    const candidateUrl = new URL(resolveAppUrl(value, fallbackRouteKey));
+    return isSafeRedirectUrl(candidateUrl) ? candidateUrl : fallbackUrl;
+  } catch (error) {
+    return fallbackUrl;
+  }
+}
+
 function sanitizeRedirectTarget(value) {
   const trimmedValue = String(value ?? "").trim();
   if (!trimmedValue) return "";
 
   try {
-    return resolveAppUrl(trimmedValue, "watchHistory");
+    const redirectUrl = resolveSafeRedirectUrl(trimmedValue, "watchHistory");
+    return isSafeRedirectUrl(redirectUrl) ? redirectUrl.href : "";
   } catch (error) {
     return "";
   }
@@ -636,27 +656,13 @@ function encodeAppStateTransfer(state) {
 function buildPostAuthRedirectUrl(targetPathOrRouteKey, user) {
   const redirectUrl = Object.prototype.hasOwnProperty.call(APP_ROUTE_PATHS, targetPathOrRouteKey)
     ? buildRouteUrlWithApiBase(targetPathOrRouteKey)
-    : new URL(resolveAppUrl(targetPathOrRouteKey, "watchHistory"));
+    : resolveSafeRedirectUrl(targetPathOrRouteKey, "watchHistory");
 
   if (redirectUrl.origin === window.location.origin) {
     return redirectUrl.href;
   }
 
-  const accessToken = String(localStorage.getItem(ACCESS_TOKEN_STORAGE_KEY) ?? "").trim();
-  const transferredState = {
-    apiBaseUrl: resolveApiBaseUrl(),
-    currentUser: user,
-  };
-
-  if (accessToken) {
-    transferredState.accessToken = accessToken;
-  }
-
-  const hashParams = new URLSearchParams(redirectUrl.hash.startsWith("#") ? redirectUrl.hash.slice(1) : redirectUrl.hash);
-  hashParams.set(APP_STATE_TRANSFER_HASH_KEY, encodeAppStateTransfer(transferredState));
-  redirectUrl.hash = hashParams.toString();
-
-  return redirectUrl.href;
+  return buildRouteUrlWithApiBase("watchHistory").href;
 }
 
 async function sendAuthRequest(endpoint, payload) {
@@ -851,7 +857,7 @@ function restoreStoredSession(redirectTarget = "") {
   if (!hasAuthenticatedSession()) return false;
 
   const nextUrl = redirectTarget
-    ? new URL(redirectTarget, window.location.href)
+    ? resolveSafeRedirectUrl(redirectTarget, "watchHistory")
     : buildRouteUrlWithApiBase("watchHistory");
   const currentUrl = new URL(window.location.href);
   if (nextUrl.href === currentUrl.href) {

@@ -2,6 +2,35 @@
   padding-top: 28px;
 }
 
+.info-page--guest .history-page__content {
+  display: grid;
+  align-items: center;
+  min-height: 100vh;
+  padding-top: 0;
+}
+
+.info-page__guest-backdrop {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  padding: 24px;
+  background:
+    radial-gradient(circle at top, rgba(124, 92, 252, 0.16), transparent 34%),
+    linear-gradient(180deg, rgba(244, 242, 255, 0.94), rgba(250, 249, 255, 0.98));
+}
+
+.info-page__guest-modal {
+  width: min(720px, 100%);
+}
+
+.info-card--modal,
+.contact-card--modal {
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+  padding: 0;
+}
+
 .history-heading {
   display: flex;
   align-items: flex-end;
@@ -168,6 +197,12 @@
 @media (max-width: 680px) {
   .info-page .history-page__content {
     padding-top: 24px;
+  }
+
+  .info-page--guest .history-page__content,
+  .info-page__guest-backdrop {
+    min-height: 100dvh;
+    padding: 16px;
   }
 
   .history-heading__title {

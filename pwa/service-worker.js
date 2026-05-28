@@ -1,4 +1,4 @@
-const SW_VERSION = "movie-tracker-pwa-v18";
+const SW_VERSION = "movie-tracker-pwa-v19";
 const HTML_CACHE = `${SW_VERSION}-html`;
 const STATIC_CACHE = `${SW_VERSION}-static`;
 const CORE_ASSETS = [
@@ -15,17 +15,17 @@ const CORE_ASSETS = [
   "./pages/folder-detail.html",
   "./pages/movie-detail.html",
   "./pages/profile.html",
-  "./src/scripts/app-runtime.js?v=20260524d",
+  "./src/scripts/app-runtime.js?v=20260527a",
   "./src/scripts/stores/folders-store.js",
   "./src/scripts/services/media-api.js",
   "./src/scripts/pages/watch-history.js?v=20260524c",
   "./src/scripts/pages/folders.js",
-  "./src/scripts/pages/about.js",
-  "./src/scripts/pages/contacts.js",
+  "./src/scripts/pages/about.js?v=20260527a",
+  "./src/scripts/pages/contacts.js?v=20260527a",
   "./src/scripts/pages/folder-create.js",
   "./src/scripts/pages/folder-detail.js",
   "./src/scripts/pages/movie-detail.js",
-  "./src/scripts/pages/profile.js",
+  "./src/scripts/pages/profile.js?v=20260527a",
   "./src/scripts/pwa/network.js",
   "./src/scripts/pwa/sync-queue.js",
   "./src/scripts/pwa/init.js",
@@ -39,7 +39,7 @@ const CORE_ASSETS = [
   "./src/styles/components/pwa-shell.css",
   "./src/styles/pages/watch-history.css",
   "./src/styles/pages/folders.css",
-  "./src/styles/pages/info-page.css",
+  "./src/styles/pages/info-page.css?v=20260527a",
   "./src/styles/pages/folder-create.css",
   "./src/styles/pages/folder-detail.css",
   "./src/styles/pages/movie-detail.css",

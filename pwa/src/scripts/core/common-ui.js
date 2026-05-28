@@ -537,6 +537,22 @@
     stagingRoot.removeAttribute("aria-hidden");
   }
 
+  function detachDuplicateRootId(currentRoot, stagingRoot) {
+    const currentRootId = currentRoot?.id;
+    const stagingRootId = stagingRoot?.id;
+
+    if (!currentRootId || !stagingRootId || currentRootId !== stagingRootId) {
+      return () => {};
+    }
+
+    currentRoot.removeAttribute("id");
+    return () => {
+      if (currentRoot.isConnected && !currentRoot.id) {
+        currentRoot.id = currentRootId;
+      }
+    };
+  }
+
   async function navigateToPage(url, options = {}) {
     const targetUrl = new URL(url, window.location.href);
     const currentUrl = new URL(window.location.href);
@@ -579,11 +595,17 @@
       stagingRoot.setAttribute("aria-hidden", "true");
       currentRoot.insertAdjacentElement("afterend", stagingRoot);
 
+      const restoreCurrentRootId = detachDuplicateRootId(currentRoot, stagingRoot);
+
       if (!options.fromPopState) {
         window.history.pushState({ softNav: true }, "", targetUrl.href);
       }
 
-      await loadPageScripts(nextDocument, targetUrl.href);
+      try {
+        await loadPageScripts(nextDocument, targetUrl.href);
+      } finally {
+        restoreCurrentRootId();
+      }
 
       if (token !== navigationToken) {
         stagingRoot.remove();

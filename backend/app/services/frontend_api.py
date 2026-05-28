@@ -203,24 +203,27 @@ def build_profile_payload(
 ) -> dict[str, object]:
     avatar_state = get_avatar_state(user)
     viewer_id = viewer.id if viewer is not None else None
+    is_owner = viewer_id == user.id if viewer_id is not None else False
     is_following = bool(
         viewer_id
         and viewer_id != user.id
         and is_following_user(db, viewer_id, user.id)
     )
-    return {
+    payload = {
         "id": user.id,
         "username": user.login,
         "displayName": user.display_name,
-        "extensionCode": user.extension_code,
         "avatarKey": avatar_state["avatarKey"],
         "avatarImage": avatar_state["avatarImage"],
         "profileUrl": user.profile_url,
         "followersCount": get_followers_count(db, user.id),
         "followingCount": get_following_count(db, user.id),
         "isFollowing": is_following,
-        "isOwner": viewer_id == user.id if viewer_id is not None else False,
+        "isOwner": is_owner,
     }
+    if is_owner:
+        payload["extensionCode"] = user.extension_code
+    return payload
 
 
 def parse_duration_minutes(value: str | None) -> float:

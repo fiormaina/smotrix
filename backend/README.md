@@ -22,7 +22,7 @@ python -m venv .venv
 2. Установить зависимости:
 
 ```powershell
-pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
 3. Создать `.env` на основе `.env.example` и указать доступы к MySQL.
@@ -44,10 +44,12 @@ mysql -h localhost -P 3306 -u root -p movie_tracker < migrations/007_persist_fro
 5. Запустить API:
 
 ```powershell
-uvicorn app.main:app --reload
+.\.venv\Scripts\python.exe -m uvicorn app.main:app --reload
 ```
 
 API будет доступно на `http://127.0.0.1:8000`.
+
+Если запускать просто `pip` или `uvicorn`, PowerShell может взять глобальный Python вместо проектного `.venv`. Для MySQL-аутентификации `caching_sha2_password` это часто заканчивается ошибкой про отсутствующий пакет `cryptography` в другой среде.
 
 ## Регистрация
 

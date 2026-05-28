@@ -79,6 +79,11 @@
   let socialOverlayPendingKind = "";
   const showToast = createToastController((updater) => setState(updater, { scope: "overlay" }));
 
+  function getProfileRootElement() {
+    const roots = document.querySelectorAll("#profile-app");
+    return roots.length ? roots[roots.length - 1] : null;
+  }
+
   function cloneState(value) {
     return {
       ...value,
@@ -558,6 +563,19 @@
     `;
   }
 
+  function renderProfileBackLink() {
+    if (state.isOwner) return "";
+    const profileUrl = routes.profile();
+    return `
+      <a class="profile-page__back" href="${escapeHtml(profileUrl)}" data-nav-url="${escapeHtml(profileUrl)}">
+        <svg width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <path d="M11 4L6 9L11 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        В свой профиль
+      </a>
+    `;
+  }
+
   function renderExtensionConnect() {
     if (!state.isOwner || !state.user) return "";
 
@@ -965,6 +983,7 @@
 
   function renderReadyPage() {
     return `
+      ${renderProfileBackLink()}
       ${renderProfileHero()}
       ${renderExtensionConnect()}
       ${renderStats()}
@@ -1184,6 +1203,16 @@
 
     const requestId = ++socialOverlayRequestId;
     socialOverlayPendingKind = kind;
+
+    setState((currentState) => ({
+      ...currentState,
+      socialOverlay: {
+        isOpen: true,
+        kind,
+        status: "loading",
+        items: [],
+      },
+    }), { scope: "overlay" });
 
     try {
       const items = await fetchSocialOverlayUsers(kind);
@@ -1676,7 +1705,7 @@
   }
 
   function initProfilePage() {
-    rootElement = document.querySelector("#profile-app");
+    rootElement = getProfileRootElement();
     if (!rootElement) return;
 
     rootElement.addEventListener("click", handleRootClick);

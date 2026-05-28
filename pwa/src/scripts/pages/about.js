@@ -1,5 +1,6 @@
 (() => {
   const routes = window.MovieTrackerRoutes;
+  const { hasAuthenticatedSession, navigateToPage } = window.MovieTrackerUI;
   const { createPrimaryTabs, renderAppFooter, renderAppHeader } = window.MovieTrackerAppShell;
 
   function createSupportTabs(activeSection = "") {
@@ -46,7 +47,45 @@
     `;
   }
 
+  function renderGuestInfoModal() {
+    return `
+      <div class="info-page__guest-backdrop">
+        <section class="modal-card info-page__guest-modal" role="dialog" aria-modal="true" aria-label="О проекте">
+          <button class="modal-card__close" type="button" data-action="close-guest-info" aria-label="Закрыть">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+              <path d="M4.5 4.5L13.5 13.5M13.5 4.5L4.5 13.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+            </svg>
+          </button>
+          <h2 class="modal-card__title">О проекте</h2>
+          <div class="modal-card__body">
+            <div class="info-card info-card--modal">
+              <div class="info-card__text">
+                <p>Платформа "Смотрикс" помогает сохранять фильмы, сериалы и видео, которые вы смотрите, в одном удобном месте.</p>
+                <p>Вы можете вести личную историю просмотров, добавлять материалы вручную, распределять их по папкам и быстро возвращаться к интересному контенту.</p>
+                <p>С помощью браузерного расширения часть просмотров может сохраняться автоматически, а нужный материал всегда можно добавить самостоятельно.</p>
+                <p>После входа в аккаунт вам будут доступны все разделы приложения и полная навигация.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    `;
+  }
+
   function renderPage() {
+    if (!hasAuthenticatedSession()) {
+      return `
+        <div class="history-page info-page info-page--guest info-page--about">
+          <h1 class="sr-only">Страница о проекте Смотрикс</h1>
+          <div class="history-page__shell">
+            <div class="history-page__content">
+              ${renderGuestInfoModal()}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
     return `
       <div class="history-page info-page info-page--about">
         <h1 class="sr-only">Страница о проекте Смотрикс</h1>
@@ -67,6 +106,16 @@
     const rootElement = document.querySelector("#about-app");
     if (!rootElement) return;
     rootElement.innerHTML = renderPage();
+    rootElement.addEventListener("click", (event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      if (
+        target.closest("[data-action='close-guest-info']") ||
+        target.classList.contains("info-page__guest-backdrop")
+      ) {
+        navigateToPage(routes.home);
+      }
+    });
   }
 
   initAboutPage();

@@ -104,10 +104,20 @@ class ProfilePayloadTests(unittest.TestCase):
         self.assertEqual(payload["avatarImage"], "https://cdn.example/avatar.png")
         self.assertNotIn("display_name", payload)
         self.assertNotIn("extension_code", payload)
+        self.assertNotIn("extensionCode", payload)
         self.assertNotIn("avatar_key", payload)
         self.assertNotIn("avatar_image", payload)
         self.assertNotIn("profile_url", payload)
         self.assertNotIn("login", payload)
+
+    def test_profile_payload_includes_extension_code_for_owner_only(self) -> None:
+        owner_payload = build_profile_payload(self.db, self.target, self.target)
+        viewer_payload = build_profile_payload(self.db, self.target, self.viewer)
+
+        self.assertEqual(owner_payload["extensionCode"], "MT-TARGET-01")
+        self.assertTrue(owner_payload["isOwner"])
+        self.assertNotIn("extensionCode", viewer_payload)
+        self.assertFalse(viewer_payload["isOwner"])
 
     def test_profile_connections_response_returns_followers_and_following_lists(self) -> None:
         self.db.add_all([

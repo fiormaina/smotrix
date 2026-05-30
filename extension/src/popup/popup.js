@@ -1,4 +1,4 @@
-import { BINDING_STORAGE_KEY as STORAGE_KEY, readApiBaseUrl } from '../src/shared/extension-config.js';
+import { BINDING_STORAGE_KEY as STORAGE_KEY, readApiBaseUrl } from '../shared/extension-config.js';
 
 const USE_MOCK_BINDING = false;
 const EXTENSION_CODE_PATTERN = /^MT-[A-Z0-9]{4}-[A-Z0-9]{4}$/;

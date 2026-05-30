@@ -44,12 +44,34 @@
         "https://wink.ru/*",
         "https://*.wink.ru/*"
       ],
-      "js": ["src/content/main.js"],
-      "run_at": "document_start",
-      "type": "module"
+      "js": ["src/content/boot.js"],
+      "run_at": "document_start"
     }
   ],
   "web_accessible_resources": [
+    {
+      "resources": [
+        "src/content/*.js",
+        "src/platforms/*.js",
+        "src/shared/*.js"
+      ],
+      "matches": [
+        "https://amediateka.ru/*",
+        "https://*.amediateka.ru/*",
+        "https://ivi.ru/*",
+        "https://*.ivi.ru/*",
+        "https://hd.kinopoisk.ru/*",
+        "https://*.hd.kinopoisk.ru/*",
+        "https://kion.ru/*",
+        "https://*.kion.ru/*",
+        "https://premier.one/*",
+        "https://*.premier.one/*",
+        "https://viju.ru/*",
+        "https://*.viju.ru/*",
+        "https://wink.ru/*",
+        "https://*.wink.ru/*"
+      ]
+    },
     {
       "resources": ["src/page/ivi-fetch-bridge.js"],
       "matches": ["https://www.ivi.ru/*", "https://*.ivi.ru/*"]

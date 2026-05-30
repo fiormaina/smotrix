@@ -88,6 +88,10 @@ function stripWinkTitle(t) {
 function stripIviTitle(t) {
   t = t.replace(/^(?:Фильм|Сериал|Шоу|Мультфильм)\s+/iu, '');
   t = t.replace(
+    /\s*\(\s*(?:фильм|сериал|шоу|мультфильм)\s+(19|20)\d{2}\s*\)\s*$/iu,
+    ''
+  );
+  t = t.replace(
     /\s+\d+\s+сезон\s+\d+\s+серия\s+смотреть онлайн(?: бесплатно)? в хорошем HD качестве\s*$/iu,
     ''
   );

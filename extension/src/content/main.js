@@ -111,7 +111,15 @@ async function run() {
 
       try {
         const meta = await platform.getMeta();
-        if (!meta || !meta.title || !meta.url) return;
+        if (!meta || !meta.title || !meta.url) {
+          log('skip sync: meta is incomplete', {
+            platform: platform.id,
+            hasMeta: Boolean(meta),
+            title: meta?.title || null,
+            url: meta?.url || null,
+          });
+          return;
+        }
 
         const payload = buildPayload({
           platformId: platform.id,

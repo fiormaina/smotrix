@@ -90,7 +90,12 @@ export function startVideoTracker({ onProgress }) {
   function rescan() {
     const videos = Array.from(document.querySelectorAll('video'));
     const best = pickMainVideo(videos);
-    if (best) attach(best);
+    if (best) {
+      attach(best);
+      return;
+    }
+
+    log('video not found on page yet');
   }
 
   const mo = new MutationObserver(() => {

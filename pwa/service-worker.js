@@ -1,4 +1,4 @@
-const SW_VERSION = "movie-tracker-pwa-v19";
+const SW_VERSION = "movie-tracker-pwa-v22";
 const HTML_CACHE = `${SW_VERSION}-html`;
 const STATIC_CACHE = `${SW_VERSION}-static`;
 const CORE_ASSETS = [
@@ -11,21 +11,24 @@ const CORE_ASSETS = [
   "./pages/folders.html",
   "./pages/about.html",
   "./pages/contacts.html",
+  "./privacy/",
+  "./privacy/index.html",
   "./pages/folder-create.html",
   "./pages/folder-detail.html",
   "./pages/movie-detail.html",
   "./pages/profile.html",
-  "./src/scripts/app-runtime.js?v=20260527a",
+  "./src/scripts/app-runtime.js?v=20260530b",
   "./src/scripts/stores/folders-store.js",
   "./src/scripts/services/media-api.js",
   "./src/scripts/pages/watch-history.js?v=20260524c",
   "./src/scripts/pages/folders.js",
   "./src/scripts/pages/about.js?v=20260527a",
   "./src/scripts/pages/contacts.js?v=20260527a",
+  "./src/scripts/pages/privacy.js?v=20260530a",
   "./src/scripts/pages/folder-create.js",
   "./src/scripts/pages/folder-detail.js",
   "./src/scripts/pages/movie-detail.js",
-  "./src/scripts/pages/profile.js?v=20260527a",
+  "./src/scripts/pages/profile.js?v=20260530b",
   "./src/scripts/pwa/network.js",
   "./src/scripts/pwa/sync-queue.js",
   "./src/scripts/pwa/init.js",

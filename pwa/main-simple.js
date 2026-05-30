@@ -26,6 +26,7 @@ const APP_ROUTE_PATHS = Object.freeze({
   watchHistory: "pages/watch-history.html",
   about: "pages/about.html",
   contacts: "pages/contacts.html",
+  privacy: "privacy/",
   profile: "pages/profile.html",
 });
 
@@ -63,6 +64,13 @@ const authModalContent = {
         autocomplete: "new-password",
         placeholder: "Минимум 8 символов",
         minLength: 8,
+      },
+      {
+        id: "register-privacy-consent",
+        name: "privacyConsent",
+        type: "checkbox",
+        labelHtml: () =>
+          `Согласен с <a class="auth-modal__link" href="${escapeHtml(resolveAppRouteUrl("privacy"))}" target="_blank" rel="noopener noreferrer">Политикой обработки персональных данных</a>`,
       },
     ],
   },
@@ -130,6 +138,29 @@ function renderActions(actions) {
 function renderAuthField(field) {
   const minLengthAttribute = field.minLength ? ` minlength="${field.minLength}"` : "";
   const errorId = `${field.id}-error`;
+  const labelHtml = typeof field.labelHtml === "function" ? field.labelHtml() : "";
+
+  if (field.type === "checkbox") {
+    return `
+      <div class="auth-modal__field auth-modal__field--checkbox">
+        <div class="auth-modal__checkbox-row">
+          <input
+            class="auth-modal__checkbox-input"
+            id="${escapeHtml(field.id)}"
+            name="${escapeHtml(field.name)}"
+            type="checkbox"
+            aria-describedby="${escapeHtml(errorId)}"
+            aria-invalid="false"
+            required
+          />
+          <label class="auth-modal__checkbox-label" for="${escapeHtml(field.id)}">
+            ${labelHtml}
+          </label>
+        </div>
+        <span class="auth-modal__error" id="${escapeHtml(errorId)}" data-auth-error="${escapeHtml(field.name)}"></span>
+      </div>
+    `;
+  }
 
   return `
     <label class="auth-modal__field" for="${escapeHtml(field.id)}">
@@ -277,6 +308,12 @@ function getAuthFieldConfig(form, input) {
 }
 
 function getAuthFieldError(input, field) {
+  if (field.type === "checkbox") {
+    return input.checked
+      ? ""
+      : "Нужно согласиться с Политикой обработки персональных данных.";
+  }
+
   const value = input.value.trim();
 
   if (!value) {
@@ -795,7 +832,7 @@ async function handleAuthSubmit(event) {
 }
 
 function handleAuthInput(event) {
-  const input = event.target.closest(".auth-modal__input");
+  const input = event.target.closest("[data-auth-modal] input");
   if (!input) return;
 
   const form = input.closest("[data-auth-form]");
@@ -810,8 +847,9 @@ function handleAuthInput(event) {
 }
 
 function handleAuthFocusOut(event) {
-  const input = event.target.closest(".auth-modal__input");
-  if (!input || !input.value.trim()) return;
+  const input = event.target.closest("[data-auth-modal] input");
+  if (!input) return;
+  if (input.type !== "checkbox" && !input.value.trim()) return;
   validateAuthInput(input);
 
   const form = input.closest("[data-auth-form]");

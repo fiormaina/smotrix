@@ -2,6 +2,11 @@
   padding-top: 28px;
 }
 
+.info-page__content-stack {
+  display: grid;
+  gap: 18px;
+}
+
 .info-page--guest .history-page__content {
   display: grid;
   align-items: center;
@@ -104,6 +109,56 @@
 
 .info-card__text p {
   margin: 0;
+}
+
+.info-card__title {
+  margin: 0 0 18px;
+  font-size: clamp(1.45rem, 2.2vw, 1.85rem);
+  line-height: 1.18;
+}
+
+.info-card__section-title {
+  margin: 0 0 10px;
+  font-size: 1.02rem;
+  line-height: 1.45;
+  color: #2f2a3b;
+}
+
+.info-card__list {
+  margin: 0;
+  padding-left: 22px;
+}
+
+.info-card__list li + li {
+  margin-top: 10px;
+}
+
+.info-card__link {
+  color: var(--accent-strong);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.info-page__back {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--white);
+  color: var(--accent-strong);
+  text-decoration: none;
+  transition: background-color 160ms ease, transform 160ms ease, border-color 160ms ease;
+}
+
+.info-page__back:hover,
+.info-page__back:focus-visible {
+  border-color: var(--accent-border);
+  background: var(--accent-soft);
+  transform: translateY(-1px);
 }
 
 .contact-card {

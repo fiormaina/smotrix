@@ -272,6 +272,11 @@ button {
   text-align: left;
 }
 
+.auth-modal__field--checkbox {
+  gap: 6px;
+  margin-top: 2px;
+}
+
 .auth-modal__label {
   color: #332b42;
   font-size: 0.95rem;
@@ -316,6 +321,48 @@ button {
 
 .auth-modal__field--invalid .auth-modal__label {
   color: #9d2740;
+}
+
+.auth-modal__checkbox-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.auth-modal__checkbox-input {
+  width: 18px;
+  height: 18px;
+  margin: 2px 0 0;
+  accent-color: #5a4bcc;
+  flex-shrink: 0;
+}
+
+.auth-modal__checkbox-input:focus-visible {
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(133, 131, 232, 0.24);
+  border-radius: 5px;
+}
+
+.auth-modal__checkbox-label {
+  color: #332b42;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.auth-modal__field--invalid .auth-modal__checkbox-label {
+  color: #9d2740;
+}
+
+.auth-modal__link {
+  color: #4d46a7;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 160ms ease;
+}
+
+.auth-modal__link:hover,
+.auth-modal__link:focus-visible {
+  color: #372f92;
 }
 
 .auth-modal__error {

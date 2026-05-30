@@ -9,6 +9,7 @@
     folders: "pages/folders.html",
     about: "pages/about.html",
     contacts: "pages/contacts.html",
+    privacy: "privacy/",
     folderCreate: "pages/folder-create.html",
     folderDetail: "pages/folder-detail.html",
     movieDetail: "pages/movie-detail.html",
@@ -104,6 +105,7 @@
     folders: buildRoutePath("folders"),
     about: buildRoutePath("about"),
     contacts: buildRoutePath("contacts"),
+    privacy: buildRoutePath("privacy"),
     folderCreate: buildRoutePath("folderCreate"),
     folderDetail: (params = {}) =>
       buildRoutePath("folderDetail", params),

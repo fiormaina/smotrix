@@ -4,10 +4,17 @@
 
   function getProjectRootPath() {
     const pathname = window.location.pathname;
-    const pagesMarker = "/pages/";
+    const scopedMarkers = ["/pages/", "/privacy/"];
 
-    if (pathname.includes(pagesMarker)) {
-      return pathname.slice(0, pathname.indexOf(pagesMarker) + 1);
+    for (const marker of scopedMarkers) {
+      if (pathname.includes(marker)) {
+        return pathname.slice(0, pathname.indexOf(marker) + 1);
+      }
+    }
+
+    if (pathname.endsWith("/privacy") || pathname.endsWith("/privacy/index.html")) {
+      const privacyMarker = "/privacy";
+      return pathname.slice(0, pathname.indexOf(privacyMarker) + 1);
     }
 
     return pathname.replace(/[^/]*$/, "");

@@ -384,6 +384,7 @@
     folders: "pages/folders.html",
     about: "pages/about.html",
     contacts: "pages/contacts.html",
+    privacy: "privacy/",
     folderCreate: "pages/folder-create.html",
     folderDetail: "pages/folder-detail.html",
     movieDetail: "pages/movie-detail.html",
@@ -479,6 +480,7 @@
     folders: buildRoutePath("folders"),
     about: buildRoutePath("about"),
     contacts: buildRoutePath("contacts"),
+    privacy: buildRoutePath("privacy"),
     folderCreate: buildRoutePath("folderCreate"),
     folderDetail: (params = {}) =>
       buildRoutePath("folderDetail", params),
@@ -582,6 +584,10 @@
     );
   }
 
+  function isTruthyQueryFlag(value) {
+    return ["1", "true", "yes", "on"].includes(String(value ?? "").trim().toLowerCase());
+  }
+
   function isPublicProfilePreviewUrl(url = window.location.href) {
     const parsedUrl = new URL(url, window.location.href);
     const profileTarget = String(parsedUrl.searchParams.get("user") ?? "")
@@ -601,6 +607,51 @@
       parsedUrl.pathname.endsWith("/folder-detail.html") &&
       Boolean(String(parsedUrl.searchParams.get("share") ?? "").trim())
     );
+  }
+
+  function isWatchHistoryPreviewUrl(url = window.location.href) {
+    const parsedUrl = new URL(url, window.location.href);
+    return (
+      parsedUrl.pathname.endsWith("/watch-history.html") &&
+      isTruthyQueryFlag(parsedUrl.searchParams.get("preview"))
+    );
+  }
+
+  function requiresAuthenticatedSession(url = window.location.href) {
+    const parsedUrl = new URL(url, window.location.href);
+    const pathname = parsedUrl.pathname;
+
+    if (pathname.endsWith("/watch-history.html")) {
+      return !isWatchHistoryPreviewUrl(parsedUrl.href);
+    }
+
+    if (pathname.endsWith("/folders.html") || pathname.endsWith("/folder-create.html")) {
+      return true;
+    }
+
+    if (pathname.endsWith("/folder-detail.html")) {
+      return !Boolean(String(parsedUrl.searchParams.get("share") ?? "").trim());
+    }
+
+    if (pathname.endsWith("/profile.html")) {
+      return !isPublicProfilePreviewUrl(parsedUrl.href);
+    }
+
+    return false;
+  }
+
+  function redirectToHomePage() {
+    const homeUrl = new URL(routes.home, window.location.href);
+    window.location.replace(homeUrl.href);
+  }
+
+  function ensureAuthenticatedPageAccess(url = window.location.href) {
+    if (hasAuthenticatedSession() || !requiresAuthenticatedSession(url)) {
+      return true;
+    }
+
+    redirectToHomePage();
+    return false;
   }
 
   function isGuestPreviewMode(url = window.location.href) {
@@ -736,7 +787,15 @@
     if (pathname.endsWith("/folders.html")) return "folders";
     if (pathname.endsWith("/profile.html")) return "profile";
     if (pathname.endsWith("/movie-detail.html")) return "detail";
-    if (pathname.endsWith("/about.html") || pathname.endsWith("/contacts.html")) return "info";
+    if (
+      pathname.endsWith("/about.html") ||
+      pathname.endsWith("/contacts.html") ||
+      pathname.endsWith("/privacy") ||
+      pathname.endsWith("/privacy/") ||
+      pathname.endsWith("/privacy/index.html")
+    ) {
+      return "info";
+    }
     return "history";
   }
 
@@ -991,6 +1050,10 @@
     const currentUrl = new URL(window.location.href);
 
     if (targetUrl.href === currentUrl.href && !options.force) return;
+    if (!hasAuthenticatedSession() && requiresAuthenticatedSession(targetUrl.href)) {
+      redirectToHomePage();
+      return;
+    }
 
     closeGuestAuthModal();
 
@@ -1185,8 +1248,13 @@
     navigateToPage(window.location.href, { fromPopState: true, force: true });
   });
 
+  window.addEventListener("pageshow", () => {
+    ensureAuthenticatedPageAccess();
+  });
+
   window.MovieTrackerUI = {
     autoSizeTextarea,
+    ensureAuthenticatedPageAccess,
     escapeHtml,
     hasAuthenticatedSession,
     isGuestPreviewMode,

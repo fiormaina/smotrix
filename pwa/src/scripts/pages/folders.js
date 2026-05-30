@@ -1,5 +1,6 @@
 (() => {
   const {
+    ensureAuthenticatedPageAccess,
     escapeHtml,
     navigateToPage,
     renderModalShell,
@@ -773,6 +774,8 @@
   }
 
   function initFoldersPage() {
+    if (!ensureAuthenticatedPageAccess()) return;
+
     rootElement = document.querySelector("#folders-app");
     if (!rootElement) return;
 

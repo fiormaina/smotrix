@@ -1,5 +1,5 @@
 (() => {
-  const { escapeHtml, navigateToPage, renderToasts } = window.MovieTrackerUI;
+  const { ensureAuthenticatedPageAccess, escapeHtml, navigateToPage, renderToasts } = window.MovieTrackerUI;
   const { createToastController } = window.MovieTrackerHelpers;
   const { createPrimaryTabs, renderAppHeader, renderBackLink } = window.MovieTrackerAppShell;
   const { createFolder, getFolderLimits, getFolderPageUrl } = window.MovieTrackerFolders;
@@ -207,6 +207,8 @@
   }
 
   function initFolderCreatePage() {
+    if (!ensureAuthenticatedPageAccess()) return;
+
     rootElement = document.querySelector("#folder-create-app");
     if (!rootElement) return;
 

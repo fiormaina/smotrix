@@ -1,6 +1,7 @@
 (() => {
 const {
   autoSizeTextarea,
+  ensureAuthenticatedPageAccess,
   escapeHtml,
   navigateToPage,
   renderModalShell,
@@ -1625,6 +1626,8 @@ function handleRootInput(event) {
 }
 
 function initWatchHistoryPage() {
+  if (!ensureAuthenticatedPageAccess()) return;
+
   rootElement = document.querySelector("#watch-history-app");
   if (!rootElement) return;
 

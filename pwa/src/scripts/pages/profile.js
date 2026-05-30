@@ -1,5 +1,6 @@
 (() => {
   const {
+    ensureAuthenticatedPageAccess,
     escapeHtml,
     navigateToPage,
     renderToasts,
@@ -1527,7 +1528,7 @@
   function logoutProfile() {
     localStorage.removeItem(CURRENT_USER_STORAGE_KEY);
     localStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
-    window.location.href = routes.home;
+    window.location.replace(routes.home);
   }
 
   function openFolder(folderId) {
@@ -1705,6 +1706,8 @@
   }
 
   function initProfilePage() {
+    if (!ensureAuthenticatedPageAccess()) return;
+
     rootElement = getProfileRootElement();
     if (!rootElement) return;
 

@@ -1,5 +1,12 @@
 (() => {
-  const { escapeHtml, navigateToPage, renderModalShell, renderToasts, writeClipboardText } = window.MovieTrackerUI;
+  const {
+    ensureAuthenticatedPageAccess,
+    escapeHtml,
+    navigateToPage,
+    renderModalShell,
+    renderToasts,
+    writeClipboardText,
+  } = window.MovieTrackerUI;
   const { createToastController } = window.MovieTrackerHelpers;
   const {
     createPrimaryTabs,
@@ -1267,6 +1274,8 @@
   }
 
   function initFolderDetailPage() {
+    if (!ensureAuthenticatedPageAccess()) return;
+
     rootElement = document.querySelector("#folder-detail-app");
     if (!rootElement) return;
 

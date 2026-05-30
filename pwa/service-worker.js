@@ -1,4 +1,4 @@
-const SW_VERSION = "movie-tracker-pwa-v22";
+const SW_VERSION = "movie-tracker-pwa-v23";
 const HTML_CACHE = `${SW_VERSION}-html`;
 const STATIC_CACHE = `${SW_VERSION}-static`;
 const CORE_ASSETS = [
@@ -23,7 +23,7 @@ const CORE_ASSETS = [
   "./src/scripts/pages/watch-history.js?v=20260524c",
   "./src/scripts/pages/folders.js",
   "./src/scripts/pages/about.js?v=20260527a",
-  "./src/scripts/pages/contacts.js?v=20260527a",
+  "./src/scripts/pages/contacts.js?v=20260530c",
   "./src/scripts/pages/privacy.js?v=20260530a",
   "./src/scripts/pages/folder-create.js",
   "./src/scripts/pages/folder-detail.js",

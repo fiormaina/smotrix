@@ -137,6 +137,12 @@
         static: activeSection === "contacts",
         url: activeSection === "contacts" ? "" : routes.contacts,
       },
+      {
+        label: "Политика обработки данных",
+        active: activeSection === "privacy",
+        static: activeSection === "privacy",
+        url: activeSection === "privacy" ? "" : routes.privacy,
+      },
     ];
   }
 

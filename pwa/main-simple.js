@@ -9,6 +9,7 @@ const landingContent = {
   footerLinks: [
     { label: "О проекте", href: "pages/about.html" },
     { label: "Контакты", href: "pages/contacts.html" },
+    { label: "Политика обработки данных", href: "privacy/" },
   ],
   footerYear: "2026",
 };

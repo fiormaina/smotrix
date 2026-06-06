@@ -10,6 +10,7 @@ const landingContent = {
   footerLinks: [
     { label: "О проекте", href: routes.about },
     { label: "Контакты", href: routes.contacts },
+    { label: "Политика обработки данных", href: routes.privacy },
   ],
   footerYear: "2026",
 };

@@ -28,6 +28,7 @@ const routes = window.MovieTrackerRoutes;
 const OPEN_CREATE_MODAL_KEY = "movieTracker.openCreateFolderModal";
 const PENDING_CREATE_SOURCE_KEY = "movieTracker.pendingCreateFolderSource";
 const SECTION_ITEM_LIMIT = 8;
+const HISTORY_REFRESH_INTERVAL_MS = 15000;
 const SYSTEM_FOLDER_DEFINITIONS = Object.freeze({
   watching: {
     systemKeys: ["continue-watching", "continue_watching", "watching", "in-progress"],
@@ -168,6 +169,7 @@ let state = structuredCloneWithSet(initialState);
 let rootElement = null;
 let folderOverlayRequestId = 0;
 let hydrateWatchHistoryPromise = null;
+let watchHistoryRefreshIntervalId = 0;
 const showToast = createToastController((updater) => setState(updater, { scope: "overlay" }));
 
 function reportFatalError(error) {
@@ -954,6 +956,14 @@ function handlePageVisibilityChange() {
   hydrateWatchHistory({ silent: true });
 }
 
+function startWatchHistoryRefreshPolling() {
+  if (watchHistoryRefreshIntervalId) return;
+
+  watchHistoryRefreshIntervalId = window.setInterval(() => {
+    hydrateWatchHistory({ silent: true });
+  }, HISTORY_REFRESH_INTERVAL_MS);
+}
+
 async function continueWatching(id) {
   const item = getItemById(id);
   if (!item) return;
@@ -1662,6 +1672,7 @@ function initWatchHistoryPage() {
   document.addEventListener("visibilitychange", handlePageVisibilityChange);
   try {
     renderApp("full");
+    startWatchHistoryRefreshPolling();
     hydrateWatchHistory();
   } catch (error) {
     reportFatalError(error);

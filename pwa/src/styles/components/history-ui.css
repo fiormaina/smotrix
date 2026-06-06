@@ -98,7 +98,7 @@
 
 .watch-card {
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   border-radius: 22px;
   border: 1px solid rgba(124, 92, 252, 0.18);
   background: var(--surface);
@@ -109,6 +109,7 @@
 
 .watch-card:hover,
 .watch-card:focus-within {
+  z-index: 4;
   transform: translateY(-2px);
   border-color: rgba(124, 92, 252, 0.36);
   box-shadow: 0 22px 46px rgba(104, 87, 164, 0.12);
@@ -125,6 +126,7 @@
   align-items: center;
   justify-content: center;
   aspect-ratio: 4 / 3;
+  border-radius: 22px 22px 0 0;
   background: linear-gradient(180deg, #f2f1f8, #eceaf5);
 }
 

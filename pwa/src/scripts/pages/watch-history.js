@@ -167,6 +167,7 @@ const initialState = {
 let state = structuredCloneWithSet(initialState);
 let rootElement = null;
 let folderOverlayRequestId = 0;
+let hydrateWatchHistoryPromise = null;
 const showToast = createToastController((updater) => setState(updater, { scope: "overlay" }));
 
 function reportFatalError(error) {
@@ -887,46 +888,70 @@ function renderApp(scope = "full") {
   }
 }
 
-async function hydrateWatchHistory() {
-  setState((currentState) => ({
-    ...currentState,
-    loading: true,
-    errorMessage: "",
-  }), { scope: "content" });
-
-  if (isPreviewMode()) {
-    setState((currentState) => ({
-      ...currentState,
-      items: previewItems.map((item) => normalizeHistoryItem(item)),
-      loading: false,
-      errorMessage: "",
-    }), { scope: "content" });
-    return;
+async function hydrateWatchHistory(options = {}) {
+  if (hydrateWatchHistoryPromise) {
+    return hydrateWatchHistoryPromise;
   }
 
-  try {
-    const items = await watchHistoryApi.listWatchHistory();
-    if (!Array.isArray(items)) {
-      throw new Error("Backend вернул некорректные данные истории");
+  const { silent = false } = options;
+
+  if (!silent) {
+    setState((currentState) => ({
+      ...currentState,
+      loading: true,
+      errorMessage: "",
+    }), { scope: "content" });
+  }
+
+  const hydratePromise = (async () => {
+    if (isPreviewMode()) {
+      setState((currentState) => ({
+        ...currentState,
+        items: previewItems.map((item) => normalizeHistoryItem(item)),
+        loading: false,
+        errorMessage: "",
+      }), { scope: "content" });
+      return;
     }
 
-    const normalizedItems = items.map((item) => normalizeHistoryItem(item));
+    try {
+      const items = await watchHistoryApi.listWatchHistory();
+      if (!Array.isArray(items)) {
+        throw new Error("Backend вернул некорректные данные истории");
+      }
 
-    setState((currentState) => ({
-      ...currentState,
-      items: normalizedItems,
-      loading: false,
-      errorMessage: "",
-    }), { scope: "content" });
-  } catch (error) {
-    console.error(error);
-    setState((currentState) => ({
-      ...currentState,
-      items: [],
-      loading: false,
-      errorMessage: error.message || "Backend сейчас недоступен",
-    }), { scope: "content" });
-  }
+      const normalizedItems = items.map((item) => normalizeHistoryItem(item));
+
+      setState((currentState) => ({
+        ...currentState,
+        items: normalizedItems,
+        loading: false,
+        errorMessage: "",
+      }), { scope: "content" });
+    } catch (error) {
+      console.error(error);
+      setState((currentState) => ({
+        ...currentState,
+        items: silent ? currentState.items : [],
+        loading: false,
+        errorMessage: error.message || "Backend сейчас недоступен",
+      }), { scope: "content" });
+    }
+  })();
+
+  const trackedHydratePromise = hydratePromise.finally(() => {
+    if (hydrateWatchHistoryPromise === trackedHydratePromise) {
+      hydrateWatchHistoryPromise = null;
+    }
+  });
+
+  hydrateWatchHistoryPromise = trackedHydratePromise;
+  return hydrateWatchHistoryPromise;
+}
+
+function handlePageVisibilityChange() {
+  if (document.visibilityState !== "visible") return;
+  hydrateWatchHistory({ silent: true });
 }
 
 async function continueWatching(id) {
@@ -1634,6 +1659,7 @@ function initWatchHistoryPage() {
   rootElement.addEventListener("click", handleRootClick);
   rootElement.addEventListener("keydown", handleRootKeydown);
   rootElement.addEventListener("input", handleRootInput);
+  document.addEventListener("visibilitychange", handlePageVisibilityChange);
   try {
     renderApp("full");
     hydrateWatchHistory();
